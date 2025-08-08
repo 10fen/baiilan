@@ -591,11 +591,33 @@
             }
         }
 
-        // 处理点击事件
+        // 处理点击事件 - 适配WebView
         function handleClick(url) {
             if (url && url !== '') {
-                window.open(url, '_blank');
+                // 检测是否在WebView环境中
+                if (isWebView()) {
+                    // 在WebView中使用location.href
+                    window.location.href = url;
+                } else {
+                    // 在普通浏览器中使用window.open
+                    window.open(url, '_blank');
+                }
             }
+        }
+        
+        // 检测是否在WebView环境中
+        function isWebView() {
+            // 检测Android WebView
+            if (navigator.userAgent.includes('Android') && 
+                (navigator.userAgent.includes('wv') || 
+                 navigator.userAgent.includes('Version') && navigator.userAgent.includes('Chrome'))) {
+                return true;
+            }
+            // 检测iOS WebView
+            if (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
+                return !navigator.userAgent.includes('Safari') || navigator.userAgent.includes('WebView');
+            }
+            return false;
         }
 
 
